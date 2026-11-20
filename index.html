@@ -643,6 +643,18 @@
     var guestsInput = document.getElementById('rsvpGuests');
     var buttons     = document.querySelectorAll('.contact-btn');
 
+    // Every RSVP that is sent is also added as a new row in a Google Sheet (via a small Google Apps Script web app).
+    // Paste the Web app URL between the quotes; leave it empty to switch this off.
+    var SHEET_URL = 'https://script.google.com/macros/s/AKfycbxAjYvZMUipG2TEAjRKYGR7tNqtT-6YbBpYbGv8FZYhX_321ptKbuZ2t2ziZA125fXh/exec';
+    var INVITE_LABEL = 'Wedding v31';
+    function logRsvp(name, guests, sentTo){
+      if (!SHEET_URL) return;
+      try {
+        var body = JSON.stringify({ name:name, guests:guests, sentTo:sentTo, invite:INVITE_LABEL, page:location.href });
+        fetch(SHEET_URL, { method:'POST', mode:'no-cors', keepalive:true, headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body:body }).catch(function(){});
+      } catch (err) {}
+    }
+
     buttons.forEach(function(btn){
       btn.addEventListener('click', function(e){
         e.preventDefault();
@@ -656,6 +668,7 @@
         var phone = btn.getAttribute('data-phone');
         var msg = 'Hello! I am ' + name + ' and I would like to RSVP for Yash Sheth & Saloni Desai\'s Wedding on 02 February 2027. Number of guests attending: ' + guests + '.';
         var url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
+        var who = btn.querySelector('.contact-name'); logRsvp(name, guests, who ? who.textContent.trim() : phone);
         window.open(url, '_blank', 'noopener');
       });
     });
