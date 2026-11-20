@@ -474,7 +474,7 @@
   .card.on { opacity: 1; transform: none; }
   .card::before, .card::after { content: '✦'; position: absolute; top: 9px; font-size: 0.6rem; color: #b98a2e; }
   .card::before { left: 18px; } .card::after { right: 18px; }
-  .card-title { font-family: 'Cinzel', serif; font-weight: 700; font-size: 1.45rem; letter-spacing: 2px; color: #5a1a2a;
+  .card-title { font-family: 'Cinzel', serif; font-weight: 700; font-size: 1.45rem; white-space: nowrap; letter-spacing: 2px; color: #5a1a2a;
     min-height: 1.3em; text-transform: uppercase; }
   .card-rule { width: 46%; height: 1px; margin: 6px auto 8px; background: linear-gradient(90deg, transparent, #b98a2e, transparent); }
   .card-line { font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 1.2px; color: #6a4a1c; line-height: 1.7; }
@@ -516,7 +516,7 @@
       <div class="divider" style="margin:10px auto;"><span class="line"></span><span class="diamond"></span><span class="line"></span></div>
       <div class="day-block">
         <div class="day-head"><span class="d-num">02</span><span class="d-mon">February</span><span class="d-day">Tuesday</span></div>
-        <div class="ev" data-key="baraat"><div><div class="ev-name">Baraat</div></div><div class="ev-time"><span class="t-lbl">Time</span><span class="t-val"></span></div></div>
+        <div class="ev" data-key="baraat"><div><div class="ev-name">Baraat Prasthan</div></div><div class="ev-time"><span class="t-lbl">Time</span><span class="t-val"></span></div></div>
         <div class="ev" data-key="wedding"><div><div class="ev-name">The Wedding</div><div class="ev-note">Sea Crest Beach Resort, Dahanu</div></div><div class="ev-time"><span class="t-lbl">Time</span><span class="t-val"></span></div></div>
       </div>
       <button class="scroll-hint" onclick="goTo('panel2')">
@@ -892,7 +892,7 @@ var STORY = {
     { key:'mandva',  title:'Mandva Muhurat', day:'Monday',  date:'01 February 2027', time:'', note:'Morning' },
     { key:'haldi',   title:'Haldi',          day:'Monday',  date:'01 February 2027', time:'', note:'Followed by lunch' },
     { key:'sangeet', title:'Sangeet',        day:'Monday',  date:'01 February 2027', time:'', note:'Evening' },
-    { key:'baraat',   title:'Baraat',         day:'Tuesday', date:'02 February 2027', time:'', note:'' },
+    { key:'baraat',   title:'Baraat Prasthan', day:'Tuesday', date:'02 February 2027', time:'', note:'' },
     { key:'wedding', title:'The Wedding',    day:'Tuesday', date:'02 February 2027', time:'', note:'' }
   ]
 };
@@ -990,7 +990,7 @@ var STORY = {
   function eventRun(e, c){
     var card = c.querySelector('.card'), t = c.querySelector('.card-title'), lines = c.querySelectorAll('.card-line');
     tm(function(){ on(card); }, 500);
-    tm(function(){ typeText(t, e.title, 75); }, 1400);
+    tm(function(){ if (e.title.length > 12) t.style.fontSize = '1.12rem'; typeText(t, e.title, 75); }, 1400);
     var base = 1400 + e.title.length*75 + 300;
     for (var i=0;i<lines.length;i++) (function(i){ tm(function(){ on(lines[i]); }, base + i*700); })(i);
   }
