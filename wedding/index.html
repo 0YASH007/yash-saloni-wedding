@@ -542,6 +542,42 @@
   if (bgAudio) {
     bgAudio.removeAttribute('controls');
     bgAudio.style.display = 'none';
+    // iPhone Safari is unreliable with a multi-MB data: URI as audio source, so
+    // turn the embedded track into a blob: URL, which it plays reliably.
+    try {
+      var srcEl = bgAudio.querySelector('source');
+      var uri = srcEl && srcEl.getAttribute('src');
+      if (uri && uri.indexOf('data:') === 0) {
+        var bin = atob(uri.slice(uri.indexOf(',') + 1)), len = bin.length, bytes = new Uint8Array(len);
+        for (var bi = 0; bi < len; bi++) bytes[bi] = bin.charCodeAt(bi);
+        bgAudio.removeChild(srcEl);
+        bgAudio.src = URL.createObjectURL(new Blob([bytes], { type: 'audio/mpeg' }));
+        bgAudio.preload = 'auto';
+        bgAudio.load();
+      }
+    } catch (err) { /* fall back to the original <source> */ }
+  }
+
+  var userPaused = false;
+  function syncToggle() { if (musicToggle) musicToggle.classList.toggle('paused', bgAudio.paused); }
+  function tryPlay() {
+    var p;
+    try { p = bgAudio.play(); } catch (err) {}
+    if (p && p.then) { p.then(syncToggle, syncToggle); }
+  }
+  // If the phone blocked autoplay, start the music on the next touch/tap anywhere
+  function retryPlay() {
+    if (!bgAudio.paused || userPaused) { detachRetry(); return; }
+    tryPlay();
+  }
+  function detachRetry() {
+    document.removeEventListener('touchend', retryPlay, true);
+    document.removeEventListener('click', retryPlay, true);
+  }
+  if (bgAudio) {
+    bgAudio.addEventListener('play', syncToggle);
+    bgAudio.addEventListener('pause', syncToggle);
+    bgAudio.addEventListener('playing', detachRetry);
   }
 
   var gateOpened = false;
@@ -556,20 +592,22 @@
 
     if (bgAudio) {
       bgAudio.volume = 0.7;
-      var playPromise = bgAudio.play();
-      if (playPromise && playPromise.catch) { playPromise.catch(function(){}); }
+      tryPlay();
       if (musicToggle) musicToggle.style.display = 'flex';
+      syncToggle();
+      document.addEventListener('touchend', retryPlay, true);
+      document.addEventListener('click', retryPlay, true);
     }
   }
 
   if (musicToggle && bgAudio) {
     musicToggle.addEventListener('click', function(){
       if (bgAudio.paused) {
-        bgAudio.play().catch(function(){});
-        musicToggle.classList.remove('paused');
+        userPaused = false;
+        tryPlay();
       } else {
+        userPaused = true;
         bgAudio.pause();
-        musicToggle.classList.add('paused');
       }
     });
   }
