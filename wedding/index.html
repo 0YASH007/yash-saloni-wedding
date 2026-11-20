@@ -387,6 +387,15 @@
     cursor: pointer; box-shadow: 0 2px 6px rgba(74,44,10,0.2);
   }
   .music-toggle.paused { opacity: 0.5; }
+
+  /* ── Baraat Prasthan & Hast Milap side by side ── */
+  .ms { display: flex; margin: 2px 0 4px; }
+  .ms-row { flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 5px; padding: 8px 4px; text-align: center; }
+  .ms-row + .ms-row { border-left: 1px solid rgba(180,138,50,0.35); }
+  .ms-row { border-bottom: 1px solid rgba(180,138,50,0.35); }
+  .ms-time { text-align: center; }
+  .ms-time .t-lbl { display: inline; margin-right: 4px; }
+  .ms-time .t-val { min-width: 78px; }
 </style>
 </head>
 <body>
