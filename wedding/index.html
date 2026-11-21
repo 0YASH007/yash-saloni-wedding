@@ -706,7 +706,7 @@
       var old = [].map.call(guestNamesBox.querySelectorAll('input'), function(i){ return i.value; });
       guestNamesBox.innerHTML = '';
       if (!extra) { guestNamesBox.classList.remove('on'); return; }
-      var lbl = document.createElement('div'); lbl.className = 'gn-lbl'; lbl.textContent = 'Names of your guests (optional)';
+      var lbl = document.createElement('div'); lbl.className = 'gn-lbl'; lbl.textContent = 'Names of your guests';
       guestNamesBox.appendChild(lbl);
       for (var k = 0; k < extra; k++) {
         var inp = document.createElement('input');
