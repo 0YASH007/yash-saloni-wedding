@@ -244,6 +244,12 @@
     border: 1px solid rgba(180,138,50,0.5); outline: none;
   }
   .rsvp-input::placeholder { color: #7a5a38; }
+  /* RSVP — optional names of the extra guests (appears when 2+ guests are entered) */
+  .guest-names { display:none; flex-direction:column; gap:6px; max-height:120px; overflow-y:auto; -webkit-overflow-scrolling:touch; padding-right:2px; }
+  .guest-names.on { display:flex; }
+  .guest-names .gn-lbl { font-family:'Cinzel',serif; font-size:0.46rem; letter-spacing:1.5px; text-transform:uppercase; color:#6a3e08; text-align:center; margin:2px 0 0; }
+  .guest-names .rsvp-input { padding:7px 12px; font-size:0.8rem; }
+
   .rsvp-hint {
     font-family: 'Cinzel', serif; font-size: 0.5rem;
     letter-spacing: 1.5px; text-transform: uppercase;
@@ -516,6 +522,7 @@
       <div class="rsvp-form">
         <input type="text" id="rsvpName" class="rsvp-input" placeholder="Your Name" autocomplete="name">
         <input type="number" id="rsvpGuests" class="rsvp-input" placeholder="Number of Guests" min="1" inputmode="numeric">
+        <div class="guest-names" id="guestNames"></div>
       </div>
 
       <div class="contacts-row">
@@ -682,13 +689,36 @@
     // Paste the Web app URL between the quotes; leave it empty to switch this off.
     var SHEET_URL = 'https://script.google.com/macros/s/AKfycbxAjYvZMUipG2TEAjRKYGR7tNqtT-6YbBpYbGv8FZYhX_321ptKbuZ2t2ziZA125fXh/exec';
     var INVITE_LABEL = 'Marriage Day';
-    function logRsvp(name, guests, sentTo){
+    function logRsvp(name, guests, sentTo, guestNames){
       if (!SHEET_URL) return;
       try {
-        var body = JSON.stringify({ name:name, guests:guests, sentTo:sentTo, invite:INVITE_LABEL, page:location.href });
+        var body = JSON.stringify({ name:name, guests:guests, sentTo:sentTo, guestNames:guestNames || '', invite:INVITE_LABEL, page:location.href });
         fetch(SHEET_URL, { method:'POST', mode:'no-cors', keepalive:true, headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body:body }).catch(function(){});
       } catch (err) {}
     }
+
+    // When 2+ guests are entered, show one optional name box per extra guest
+    var guestNamesBox = document.getElementById('guestNames');
+    function renderGuestFields(){
+      if (!guestNamesBox) return;
+      var n = parseInt(guestsInput.value, 10);
+      var extra = (isNaN(n) || n < 2) ? 0 : Math.min(n, 15) - 1;
+      var old = [].map.call(guestNamesBox.querySelectorAll('input'), function(i){ return i.value; });
+      guestNamesBox.innerHTML = '';
+      if (!extra) { guestNamesBox.classList.remove('on'); return; }
+      var lbl = document.createElement('div'); lbl.className = 'gn-lbl'; lbl.textContent = 'Names of your guests (optional)';
+      guestNamesBox.appendChild(lbl);
+      for (var k = 0; k < extra; k++) {
+        var inp = document.createElement('input');
+        inp.type = 'text'; inp.className = 'rsvp-input'; inp.setAttribute('autocomplete', 'off');
+        inp.placeholder = 'Guest ' + (k + 2) + ' name'; inp.maxLength = 60;
+        if (old[k]) inp.value = old[k];
+        guestNamesBox.appendChild(inp);
+      }
+      guestNamesBox.classList.add('on');
+    }
+    guestsInput.addEventListener('input', renderGuestFields);
+    guestsInput.addEventListener('change', renderGuestFields);
 
     buttons.forEach(function(btn){
       btn.addEventListener('click', function(e){
@@ -700,10 +730,11 @@
           (name ? guestsInput : nameInput).focus();
           return;
         }
+        var extraNames = [].map.call(guestNamesBox ? guestNamesBox.querySelectorAll('input') : [], function(i){ return i.value.trim(); }).filter(Boolean);
         var phone = btn.getAttribute('data-phone');
-        var msg = 'Hello! I am ' + name + ' and I would like to RSVP for Yash Sheth & Saloni Desai\'s Wedding on 1st & 2nd February 2027. Number of guests attending: ' + guests + '.';
+        var msg = 'Hello! I am ' + name + ' and I would like to RSVP for Yash Sheth & Saloni Desai\'s Wedding on 1st & 2nd February 2027. Number of guests attending: ' + guests + '.' + (extraNames.length ? ' Guest names: ' + [name].concat(extraNames).join(', ') + '.' : '');
         var url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
-        var who = btn.querySelector('.contact-name'); logRsvp(name, guests, who ? who.textContent.trim() : phone);
+        var who = btn.querySelector('.contact-name'); logRsvp(name, guests, who ? who.textContent.trim() : phone, extraNames.join(', '));
         window.open(url, '_blank', 'noopener');
       });
     });
