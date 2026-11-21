@@ -814,7 +814,7 @@
           return;
         }
         var phone = btn.getAttribute('data-phone');
-        var msg = 'Hello! I am ' + name + ' and I would like to RSVP for Yash Sheth & Saloni Desai\'s Wedding on 02 February 2027. Number of guests attending: ' + guests + '.';
+        var msg = 'Hello! I am ' + name + ' and I would like to RSVP for Yash Sheth & Saloni Desai\'s Wedding on 1st & 2nd February 2027. Number of guests attending: ' + guests + '.';
         var url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
         var who = btn.querySelector('.contact-name'); logRsvp(name, guests, who ? who.textContent.trim() : phone);
         window.open(url, '_blank', 'noopener');
