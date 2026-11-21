@@ -409,7 +409,7 @@
   .ev-time { flex: 0 0 auto; text-align: right; }
   .ev-time .t-lbl { font-family: 'Cinzel', serif; font-size: 0.4rem; letter-spacing: 1.5px; text-transform: uppercase; color: #6a3e08; display: block; }
   /* Blank to fill in later: put the time text inside <span class="t-val"> */
-  .ev-time .t-val { display: inline-block; min-width: 74px; min-height: 1.1em; border-bottom: 1px dotted rgba(90,60,16,0.7);
+  .ev-time .t-val { display: inline-block; min-width: 74px; white-space: nowrap; padding: 0 2px; min-height: 1.1em; border-bottom: 1px dotted rgba(90,60,16,0.7);
     font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.72rem; color: #3a1e0e; text-align: center; }
   .ev-cards { width: 100%; margin: 6px 0 4px; }
   .ev-card { display: flex; align-items: center; gap: 12px; padding: 13px 12px; margin-bottom: 11px;
@@ -485,8 +485,8 @@
       </div>
       <div class="divider"><span class="line"></span><span class="diamond"></span><span class="line"></span></div>
       <div class="ev-cards d2-cards">
-        <div class="ev-card" data-ev="baraat"><div class="ec-icon"><svg width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#b98a2e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="16" cy="9" rx="9" ry="3"/><path d="M7 9v12c0 1.7 4 3 9 3s9-1.3 9-3V9"/><path d="M9 12l4 9M15 13l-3 10M17 13l3 10M23 12l-4 9"/><path d="M3 5l5 3M29 5l-5 3"/></svg></div><div class="ec-body"><div class="ev-name">Baraat Prasthan</div></div><div class="ev-time"><span class="t-lbl">Time</span><span class="t-val"></span></div></div>
-        <div class="ev-card" data-ev="hastmilap"><div class="ec-icon"><svg width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#b98a2e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12.5" cy="19" r="6.5"/><circle cx="19.5" cy="19" r="6.5"/><path d="M12 8l2-3h4l2 3-4 3z"/></svg></div><div class="ec-body"><div class="ev-name">Hast Milap</div></div><div class="ev-time"><span class="t-lbl">Time</span><span class="t-val"></span></div></div>
+        <div class="ev-card" data-ev="baraat"><div class="ec-icon"><svg width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#b98a2e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="16" cy="9" rx="9" ry="3"/><path d="M7 9v12c0 1.7 4 3 9 3s9-1.3 9-3V9"/><path d="M9 12l4 9M15 13l-3 10M17 13l3 10M23 12l-4 9"/><path d="M3 5l5 3M29 5l-5 3"/></svg></div><div class="ec-body"><div class="ev-name">Baraat Prasthan</div></div><div class="ev-time"><span class="t-lbl">Time</span><span class="t-val">3:00 PM</span></div></div>
+        <div class="ev-card" data-ev="hastmilap"><div class="ec-icon"><svg width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#b98a2e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12.5" cy="19" r="6.5"/><circle cx="19.5" cy="19" r="6.5"/><path d="M12 8l2-3h4l2 3-4 3z"/></svg></div><div class="ec-body"><div class="ev-name">Hast Milap</div></div><div class="ev-time"><span class="t-lbl">Time</span><span class="t-val">5:45 PM</span></div></div>
       </div>
       <div class="venue-section">
         <div class="venue-label">Venue</div>
